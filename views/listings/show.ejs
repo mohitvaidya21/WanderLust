@@ -1,7 +1,7 @@
 <% layout("/layouts/boilerplate.ejs") %>
 
 <script>
-    const coordinates = <%- JSON.stringify(listing.geometry.coordinates) %>;
+    const coordinates = <%- JSON.stringify(listing.geometry && listing.geometry.coordinates ? listing.geometry.coordinates : [0,0]) %>;
     const locationName = "<%= listing.location %>";
 </script>
 
@@ -9,7 +9,7 @@
         <div class="col-6 offset-3">
             <h3><%= listing.title %></h3>
             <div class="card show-card listing-card">
-                <img src="<%= listing.image.url %>" class="card-img-top show-image" alt="listing-image">
+                <img src="<%= listing.image && listing.image.url ? listing.image.url : 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800' %>" class="card-img-top show-image" alt="listing-image">
                 <div class="card-body">
                     <p class="card-text">Owned by:<i> <%= listing.owner.username %></i></p>
                     <p class="card-text"><%= listing.description %></p>

@@ -26,7 +26,7 @@
                 </div>
                 <div class="mb-3">
                     <p>Original Image</p>
-                    <img src="<%= listing.image.url %>" style="height: 200px;">
+                    <img src="<%= listing.image && listing.image.url ? listing.image.url : '' %>" style="height: 200px;">
                 </div>
                 <div class="mb-3">
                     <label for="image" class="form-label">Upload New Image</label>
