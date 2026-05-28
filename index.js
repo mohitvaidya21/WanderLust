@@ -15,7 +15,7 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
 const dbUrl = process.env.ATLASDB_URL;
-
+const PORT = process.env.PORT || 8080;
 
 const listingRouter = require("./routers/listing.js");
 const reviewRouter = require("./routers/review.js");
@@ -96,6 +96,6 @@ app.use((err,req,res,next)=>{
     let { statusCode = 500, message = "something went wrong"} = err;
     res.status(statusCode).render("./listings/error.ejs",{err})
 })
-app.listen( 8080 , ()=>{
+app.listen( PORT , ()=>{
     console.log("server is listining to port 8080");
 })
