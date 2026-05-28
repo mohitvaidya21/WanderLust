@@ -32,7 +32,7 @@ app.use(express.static(path.join(__dirname, "/public")));
 const store = MongoStore.create({
     mongoUrl: dbUrl,
     crypto: {
-        secret: process.env.SECRET,
+        secret: process.env.SECRET || "fallback-secret-key-12345",
     },
     touchAfter: 24 * 3600,
 });
