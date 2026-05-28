@@ -61,11 +61,17 @@ passport.deserializeUser(User.deserializeUser());
 
 
 main()
-    .then((res)=>{
+    .then(() => {
         console.log("Connected to db");
-    }).catch((e)=>{
-        console.log(e);
+        app.listen(PORT, () => {
+            console.log(`server is listening to port ${PORT}`);
+        });
+    })
+    .catch((e) => {
+        console.log("DB connection failed:", e);
+        process.exit(1);
     });
+
 async function main(){
     await mongoose.connect(dbUrl);
 }
@@ -95,10 +101,10 @@ app.use((req,res,next)=>{
     next(new ExpressError(404,"Page not found"));
 })
 
-app.use((err,req,res,next)=>{
-    let { statusCode = 500, message = "something went wrong"} = err;
-    return res.status(statusCode).render("./listings/error.ejs",{err})
-})
-app.listen( PORT , ()=>{
-    console.log(`server is listining to port ${PORT}`);
-})
+app.use((err, req, res, next) => {
+    if (res.headersSent) return next(err);
+    let { statusCode = 500, message = "something went wrong" } = err;
+    err.statusCode = statusCode;
+    err.message = message;
+    return res.status(statusCode).render("./listings/error.ejs", { err });
+});
