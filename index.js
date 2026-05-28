@@ -97,5 +97,5 @@ app.use((err,req,res,next)=>{
     res.status(statusCode).render("./listings/error.ejs",{err})
 })
 app.listen( PORT , ()=>{
-    console.log("server is listining to port 8080");
+    console.log(`server is listining to port ${PORT}`);
 })
