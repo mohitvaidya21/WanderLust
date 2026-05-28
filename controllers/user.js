@@ -21,7 +21,7 @@ module.exports.signup = async(req,res,next)=>{
         })   
     }catch(e){
         req.flash("error",e.message);
-        res.redirect("/signup")
+        return res.redirect("/signup")
     }
 }
 
@@ -39,7 +39,7 @@ module.exports.login = async(req,res)=>{
 module.exports.logout = (req,res,next)=>{
     req.logOut((err)=>{
         if(err){
-            next(err);
+            return next(err);
         }
         req.flash("success","you are logged out!");
         res.redirect("/listings");
