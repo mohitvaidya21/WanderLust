@@ -28,7 +28,7 @@ app.use(express.urlencoded({extended:true}));
 app.use(methodOverride("_method"));
 app.engine("ejs",ejsMate);
 app.use(express.static(path.join(__dirname,"/public")));
-
+console.log(process.env.ATLASDB_URL);
 const store = MongoStore.create({
     mongoUrl: dbUrl,
     crypto : {
@@ -38,7 +38,7 @@ const store = MongoStore.create({
   });
 const sessionOptions ={
     store,
-    secret: process.env.SECRET,
+    secret: process.env.SECRET || "mysupersecretcode",
     resave: false,
     saveUninitialized: true,
     cookie:{
