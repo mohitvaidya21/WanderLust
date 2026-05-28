@@ -4,14 +4,18 @@ const axios = require("axios");
 
 module.exports.index = async(req,res)=>{
     const allListings = await Listing.find({});
-    res.render("./listings/index.ejs",{allListings});
+    return res.render("./listings/index.ejs",{allListings});
 }
 
 module.exports.newForm = (req,res)=>{
-    res.render("./listings/new.ejs");
+    return res.render("./listings/new.ejs");
 }
 
 module.exports.createListing = async(req,res,next)=>{
+    if (!req.file) {
+        req.flash("error", "Image upload required");
+        return res.redirect("/listings/new");
+    }
     let url = req.file.path;
     let filename = req.file.filename;
     let location = req.body.listing.location;
@@ -23,6 +27,10 @@ module.exports.createListing = async(req,res,next)=>{
             }
         }
     );
+    if (!response.data.length) {
+    req.flash("error", "Invalid location");
+        return res.redirect("/listings/new");
+    }
     let data = response.data[0];
     const newListing = new Listing(req.body.listing);
     newListing.owner = req.user._id;
@@ -36,7 +44,7 @@ module.exports.createListing = async(req,res,next)=>{
     };
     await newListing.save();
     req.flash("success","New Listing Created");
-    res.redirect("/listings"); 
+    return res.redirect("/listings"); 
 };
 
 module.exports.showListing = async(req,res)=>{
@@ -55,7 +63,7 @@ module.exports.showListing = async(req,res)=>{
         return res.redirect("/listings");
     }
     // console.log(listing);
-    res.render("./listings/show.ejs",{listing});
+    return res.render("./listings/show.ejs",{listing});
 };
 
 module.exports.editForm = async(req,res)=>{
@@ -65,7 +73,7 @@ module.exports.editForm = async(req,res)=>{
         req.flash("error","Listing you requested for does not exist!");
         return res.redirect("/listings");
     }
-    res.render("./listings/edit.ejs",{listing});
+    return res.render("./listings/edit.ejs",{listing});
 };
 
 module.exports.updateListing = async(req,res)=>{
@@ -80,7 +88,7 @@ module.exports.updateListing = async(req,res)=>{
     }
     
     req.flash("success","Listing Updated!");
-    res.redirect(`/listings/${id}`);
+    return res.redirect(`/listings/${id}`);
 };
 
 module.exports.deleteListing = async(req,res)=>{
@@ -88,7 +96,7 @@ module.exports.deleteListing = async(req,res)=>{
     let delListing = await Listing.findByIdAndDelete(id);
     // console.log(delListing);
     req.flash("success","Listing Deleted");
-    res.redirect("/listings");
+    return res.redirect("/listings");
 
 };
 
@@ -109,5 +117,5 @@ module.exports.searchListings = async(req,res)=>{
         ]
     });
 
-    res.render("listings/index.ejs",{ allListings });
+    return res.render("listings/index.ejs",{ allListings });
 };
